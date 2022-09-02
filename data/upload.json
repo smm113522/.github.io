@@ -1,0 +1,8 @@
+ {
+	"downloadAddress":"http://shimengmeng.win/data/hello_1.2.apk",
+	"plugInGackage":"http://shimengmeng.win/data/fix.apatch",
+	"versionCode":4,
+	"versionName":"1.2", 
+	"versionContent":"1,修复已知bug；2，修复新功能", 
+	"timeUpload":"2017-08-07 10:00"
+}

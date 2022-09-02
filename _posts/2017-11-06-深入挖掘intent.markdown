@@ -1,0 +1,298 @@
+---
+layout:     post
+title:      "深入挖掘intent"
+subtitle:   " \"教程 \""
+date:       2017-11-06 16:54:10
+author:     "Smm"
+header-img: "img/pop/bg.jpg"
+tags:
+    - 教程
+---
+
+
+## intent 简介
+
+	Intent的中文意思是“意图，意向”，在Android中提供了Intent机制来协助应用间的交互与通讯，Intent负责对应
+	用中一次操作的动作、动作涉及数据、附加数据进行描述，Android则根据此Intent的描述，负责找到对应的组件，将
+	 Intent传递给调用的组件，并完成组件的调用。Intent不仅可用于应用程序之间，也可用于应用程序内部的
+	Activity/Service之间的交互。因此，可以将Intent理解为不同组件之间通信的“媒介”专门提供组件互相调用的相关信息。
+
+## Inten启动组件的方法
+
+Intent可以启动一个Activity，也可以启动一个Service，还可以发起一个广播Broadcasts。具体方法如下：
+
+
+组件名称
+方法名称
+ 
+Activity
+startActvity( )
+startActivity( )
+ 
+Service
+startService( )
+bindService( )
+ 
+Broadcasts
+sendBroadcasts( )
+sendOrderedBroadcasts( )
+sendStickyBroadcasts( )
+
+## Intent作用：
+
+ Intent 是一个将要执行的动作的抽象的描述，一般来说是作为参数来使用，由Intent来协助完成android各个组件之间的通讯。比如说调用 startActivity()来启动一个activity,或者由broadcaseIntent()来传递给所有感兴趣的 BroadcaseReceiver, 再或者由startService()/bindservice()来启动一个后台的service.所以可以看出来，intent主要是用来启动其他的 activity 或者service，所以可以将intent理解成activity之间的粘合剂。
+
+## Intent的属性
+
+Intent有以下几个属性：
+动作(Action),数据(Data),分类(Category),类型(Type),组件(Compent)以及扩展信(Extra)。其中最常用的是Action属性和Data属性。
+
+1. Intent的Action属性
+
+![](https://i.imgur.com/jrDWjhF.png)
+	
+2. Intent的Data属性
+3. Intent的Category属性
+4. Intent的Type属性
+5. Intent的Compent属性
+6. Intent的Extra属性
+  
+## Intent用法示例全面总结
+1. 调用拨号程序
+
+ 		// 给移动客服10086拨打电话
+		 Uri uri = Uri.parse("tel:10086");
+		 Intent intent = new Intent(Intent.ACTION_DIAL, uri);
+		 startActivity(intent);		
+
+2.发送短信或彩信
+
+		 // 给10086发送内容为“Hello”的短信
+		 Uri uri = Uri.parse("smsto:10086");
+		 Intent intent = new Intent(Intent.ACTION_SENDTO, uri);
+		 intent.putExtra("sms_body", "Hello");
+		 startActivity(intent);
+
+3 . 发送彩信（相当于发送带附件的短信）
+ 
+		 Intent intent = new Intent(Intent.ACTION_SEND);
+		 intent.putExtra("sms_body", "Hello");
+		 Uri uri = Uri.parse("content://media/external/images/media/23");
+		 intent.putExtra(Intent.EXTRA_STREAM, uri);
+		 intent.setType("image/png");
+		 startActivity(intent);
+ 
+4.通过浏览器打开网页
+
+		 // 打开Google主页
+		 Uri uri = Uri.parse("http://www.google.com");
+		 Intent intent = new Intent(Intent.ACTION_VIEW, uri);
+		 startActivity(intent);
+5.发送电子邮件
+
+		 // 给someone@domain.com发邮件
+		 Uri uri = Uri.parse("mailto:someone@domain.com");
+		 Intent intent = new Intent(Intent.ACTION_SENDTO, uri);
+		 startActivity(intent);
+ 
+		 // 给someone@domain.com发邮件发送内容为“Hello”的邮件
+		 Intent intent = new Intent(Intent.ACTION_SEND);
+		 intent.putExtra(Intent.EXTRA_EMAIL, "someone@domain.com");
+		 intent.putExtra(Intent.EXTRA_SUBJECT, "Subject");
+		 intent.putExtra(Intent.EXTRA_TEXT, "Hello");
+		 intent.setType("text/plain");
+		 startActivity(intent);
+ 
+ 		 // 给多人发邮件
+		 Intent intent=new Intent(Intent.ACTION_SEND);
+		  String[] tos = {"1@abc.com", "2@abc.com"}; // 收件人
+		  String[] ccs = {"3@abc.com", "4@abc.com"}; // 抄送
+		  String[] bccs = {"5@abc.com", "6@abc.com"}; // 密送
+		  intent.putExtra(Intent.EXTRA_EMAIL, tos);
+		  intent.putExtra(Intent.EXTRA_CC, ccs);
+		  intent.putExtra(Intent.EXTRA_BCC, bccs);
+		  intent.putExtra(Intent.EXTRA_SUBJECT, "Subject");
+		 intent.putExtra(Intent.EXTRA_TEXT, "Hello");
+		 intent.setType("message/rfc822");
+		 startActivity(intent);
+ 
+6.显示地图与路径规划
+
+		 // 打开Google地图中国北京位置（北纬39.9，东经116.3）
+		 Uri uri = Uri.parse("geo:39.9,116.3");
+		 Intent intent = new Intent(Intent.ACTION_VIEW, uri);
+		 startActivity(intent);
+		 // 路径规划：从北京某地（北纬39.9，东经116.3）到上海某地（北纬31.2，东经121.4）
+		 Uri uri = Uri.parse("http://maps.google.com/maps?f=d&saddr=39.9 116.3&daddr=31.2 21.4");
+		 Intent intent = new Intent(Intent.ACTION_VIEW, uri);
+		 startActivity(intent);
+
+7 .  播放多媒体
+ 
+		 Intent intent = new Intent(Intent.ACTION_VIEW);
+		 Uri uri = Uri.parse("file:///sdcard/foo.mp3");
+		 intent.setDataAndType(uri, "audio/mp3");
+		 startActivity(intent);
+		 
+		 Uri uri = Uri.withAppendedPath(MediaStore.Audio.Media.INTERNAL_CONTENT_URI, "1");
+		 Intent intent = new Intent(Intent.ACTION_VIEW, uri);
+ 
+8 . 拍照
+
+		 // 打开拍照程序
+		 Intent intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
+		 startActivityForResult(intent, 0);
+		 // 取出照片数据
+		 Bundle extras = intent.getExtras();
+		 Bitmap bitmap = (Bitmap) extras.get("data");
+9.获取并剪切图片
+ 
+		  // 获取并剪切图片
+	  Intent intent = new Intent(Intent.ACTION_GET_CONTENT);
+	  intent.setType("image/*");
+	  intent.putExtra("crop", "true"); // 开启剪切
+	  intent.putExtra("aspectX", 1); // 剪切的宽高比为1：2
+	  intent.putExtra("aspectY", 2);
+	  intent.putExtra("outputX", 20); // 保存图片的宽和高
+	  intent.putExtra("outputY", 40);
+	  intent.putExtra("output", Uri.fromFile(new File("/mnt/sdcard/temp"))); // 保存路径
+	  intent.putExtra("outputFormat", "JPEG");// 返回格式
+	  startActivityForResult(intent, 0);
+ 
+ 10.剪切特定图片
+		   
+	Intent intent = new Intent("com.android.camera.action.CROP");
+	intent.setClassName("com.android.camera", "com.android.camera.CropImage");
+	intent.setData(Uri.fromFile(new File("/mnt/sdcard/temp")));
+  	intent.putExtra("outputX", 1); // 剪切的宽高比为1：2
+  	intent.putExtra("outputY", 2);
+  	intent.putExtra("aspectX", 20); // 保存图片的宽和高
+  	intent.putExtra("aspectY", 40);
+  	intent.putExtra("scale", true);
+  	intent.putExtra("noFaceDetection", true);
+  	intent.putExtra("output", Uri.parse("file:///mnt/sdcard/temp"));
+  	startActivityForResult(intent, 0);
+ 
+11.打开Google Market
+		
+		// 打开Google Market直接进入该程序的详细页面
+		Uri uri = Uri.parse("market://details?id=" + "com.demo.app");
+		Intent intent = new Intent(Intent.ACTION_VIEW, uri);
+		startActivity(intent);
+
+12.安装和卸载程序
+		
+		Uri uri = Uri.fromParts("package", "com.demo.app", null);
+		Intent intent = new Intent(Intent.ACTION_DELETE, uri);
+		startActivity(intent);
+13 . 进入设置界面
+
+		// 进入无线网络设置界面（其它可以举一反三）
+		Intent intent = new Intent(android.provider.Settings.ACTION_WIRELESS_SETTINGS);
+		startActivityForResult(intent, 0);
+
+
+
+ ## 高级部分 （待定）
+
+这个是目前用到的分享微信和支付图片分享，避免了 第三方 申请和其他配置部分，简单的使用。
+其他高级部分等待好的时候进行续写。
+	
+	14 . intent 分享图片
+
+	/*
+   	 *
+   	 * 当 支付 支付的时候运行 这个方法
+   	 *
+	 */
+    private void senZhifubao() {
+        //                String path = ScreenshotUtil.getBitmapByView(this, scrollView, false);
+	//                if (!StringUtils.isEmpty(path)) {
+        Intent intent = new Intent(Intent.ACTION_SEND);
+	//                    Uri uri = Uri.fromFile(getFileStreamPath(path));
+	//                    Uri uri = Uri.fromFile(new File(path));
+        Uri uri = Uri.fromFile(ScreenshotUtil.getFileByView(this, scrollView, false));
+        intent.setType("image/*");
+        intent.putExtra(Intent.EXTRA_STREAM, uri);
+        intent.putExtra("Kdescription", "微信支付二维码");
+        if ("1".equals(pay)) {
+            intent.putExtra("sms_body", "支付宝支付二维码");
+            intent.putExtra("body", "支付宝支付二维码"); // 正文
+            intent.putExtra(Intent.EXTRA_TEXT, "支付宝支付二维码");
+        } else {
+            intent.putExtra("sms_body", "微信支付二维码");
+            intent.putExtra("body", "微信支付二维码"); // 正文
+            intent.putExtra(Intent.EXTRA_TEXT, "微信支付二维码");
+        }
+
+        intent.putExtra(Intent.EXTRA_SUBJECT, "微信支付二维码");
+        intent.putExtra(Intent.EXTRA_TEXT, "微信支付二维码");
+        intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+        startActivity(Intent.createChooser(intent, "分享到"));
+    }
+
+	或者微信 也可以多个图片 	微信支付的时候这个方法
+        Intent intent = new Intent();
+        //分享精确到微信的页面，朋友圈页面，或者选择好友分享页面
+	//                ComponentName comp = new ComponentName("com.tencent.mm", "com.tencent.mm.ui.tools.ShareToTimeLineUI");
+	//                intent.setComponent(comp);
+    intent.setAction(Intent.ACTION_SEND_MULTIPLE);
+    intent.setType("image/*");
+
+    //添加Uri图片地址
+    ArrayList<Uri> imageUris = new ArrayList<Uri>();
+    Uri uri = Uri.fromFile(ScreenshotUtil.getFileByView(this, scrollView, false));
+    imageUris.add(uri);
+    intent.putParcelableArrayListExtra(Intent.EXTRA_STREAM, imageUris);
+	
+	
+	
+## 其他
+
+	//(1)分享字符串  
+    public void shareStr(){  
+        //创建分享Intent  
+        Intent sharedIntent = new Intent();  
+        //设置动作为Intent.ACTION_SEND  
+        sharedIntent.setAction(Intent.ACTION_SEND);  
+        //设置为文本类型  
+        sharedIntent.setType("text/*");  
+        sharedIntent.putExtra(Intent.EXTRA_TEXT,"你好聪明"   ); //设置要分享的内容  
+        startActivity(Intent.createChooser(sharedIntent, "分享到："));  
+          
+    }  
+      
+    //分享图片  
+    public void shareI(){  
+        //File.separator:分割号  
+        String imagePath = Environment.getExternalStorageDirectory() + File.separator + "test.jpg";  
+        //由文件得到uri  
+        Uri imageUri = Uri.fromFile(new File(imagePath));  
+        Log.d("share", "uri:" + imageUri);  //输出：file:///storage/emulated/0/test.jpg  
+        Intent shareIntent = new Intent();  
+        shareIntent.setAction(Intent.ACTION_SEND);  
+        shareIntent.putExtra(Intent.EXTRA_STREAM, imageUri);  
+        shareIntent.setType("image/*");  
+        startActivity(Intent.createChooser(shareIntent, "分享到"));  
+          
+    }  
+    //分享音乐，这里只是可以分享到qq  
+        public void shareMusic(){  
+              
+            String url = Environment.getExternalStorageDirectory() + File.separator + "test.mp3";  
+            Intent share = new Intent(Intent.ACTION_SEND);  
+            //创建组件，  
+            ComponentName component = new ComponentName("com.tencent.mobileqq","com.tencent.mobileqq.activity.JumpActivity");  
+            share.setComponent(component);      //设置组件  
+            File file = new File(url);//参数为谋音乐在手机中的路径  
+            System.out.println("file " + file.exists());  
+            share.putExtra(Intent.EXTRA_STREAM, Uri.fromFile(file));  
+            share.setType("*/*");  
+            startActivity(Intent.createChooser(share, "分享到"));  
+  
+              
+        }  	
+
+## 最后 后谢
+ [Intent机制详解及示例总结](http://www.cnblogs.com/X-knight/p/5438042.html)
+ 

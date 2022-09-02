@@ -1,0 +1,147 @@
+---
+layout:     post
+title:      "RN Demo 一波"
+subtitle:   " \" 学习 \""
+date:       2019-03-20 8:35:10
+author:     "Smm"
+header-img: "img/002.jpg"
+tags:
+    - 教程
+---
+
+
+
+
+## RN 环境
+ 
+ 先开始 所以得有其他技能。RN 是js 代码 ，可以打包android 和ios 。
+ 
+ 开始第一步
+ 
+ 先打开命令开始rn 环境吧。
+ 
+ npm -version
+ 
+ node -v
+ 
+ 如果没有需要按照需安装上去。
+ 接着是安装RN
+ npm install -g react-native-cli（如果之前安装过全局的react-native-cli请忽略此步骤）
+ 
+ 成功之后，开始创建项目
+react-native init AwesomeProject
+
+编译并运行  在根目录下面
+npm install
+react-native run-ios
+ 
+ 运行结果
+ ![](https://reactnative.cn/docs/assets/GettingStartediOSSuccess.png)
+ 
+ 恭喜！你已经成功运行并修改了你的第一个 React Native 应用。
+ 
+ run-android 的时候，需要创建assets 文件，然后离线打包出来，ios 也可以离线打包，但是里面已经写好了，所以ios可以不用离线。
+ 
+ android 端确需要离线，所以走下面的命令。
+ 
+ react-native bundle --platform android --dev false --entry-file index.js --bundle-output android/app/src/main/assets/index.android.bundle --assets-dest android/app/src/main/res
+ 
+ 离线完之后，直接运行就可以了。
+ 
+ 在命令也行，用android studio 都可以的。
+ 
+## 界面和基础控件
+ 可以看
+ [](https://reactnative.cn/docs/components-and-apis/)
+ 里面很全也很强势
+ 
+ 
+##demo 开始 
+   用到开发工具WebStorm 2018.3.5 直接创建是可以的，运行android 和ios 都可以。android 启动需要先离线打包。
+   ios 运行需要安装xcode 工具。
+   android studio 也是必须的。直接用studio导入到项目中，需要配置到几乎没有，就是创建assets文件，放入离线文件
+   index.android.bundle 的文件即可，运行了。
+   
+   demo 界面
+   ![](http://shimengmeng.win/img/work/rn_001.png)
+   
+   ![](http://shimengmeng.win/img/work/rn_002.png)
+   
+   ![](http://shimengmeng.win/img/work/rn_003.png)
+   
+   ![](http://shimengmeng.win/img/work/rn_004.png)
+   
+   ![](http://shimengmeng.win/img/work/rn_05.png)
+   
+	难点，1.基础控件的使用。例如image 控件显示 本地图片和网络图片的不同，导致底部图片切换问题。
+	2.页面路由的控制，navigation 的为空，跳转不到。
+	3，tab_buttom 第三方加载和使用。
+	4，网络获取，和下拉刷新控件的使用。
+	5，适配android 和ios ，尤其是ios x 。。
+
+
+## 第三方可以用的（本文demo 没有用，）
+
+使用到的常用三方库，下面的只是收集，以后用起来就方便了。
+
+antd-mobile
+
+react-dom
+
+react-native-blur // 原生依赖库
+
+react-native-button
+
+react-native-device-info // 原生依赖库
+
+react-native-image-zoom-viewer
+
+react-native-message-bar
+
+react-native-orientation // 原生依赖库
+
+react-native-progress
+
+react-native-root-siblings
+
+react-native-root-toast
+
+react-native-router-flux
+
+react-native-scrollable-tab-view
+
+react-native-simple-store
+
+react-native-storage
+
+react-native-swiper
+
+react-native-tab-navigator
+
+react-native-vector-icons // 原生依赖库
+
+react-native-video // 原生依赖库
+
+react-native-viewpager
+
+react-native-zoom-image
+
+react-timer-mixin
+
+react-navigation
+
+react-redux
+
+Redux
+
+redux-actions
+
+redux-promise-middleware
+
+redux-thunk
+
+react-native-scrollable-tab-view 
+
+teaset
+
+react-native-tab-navigator

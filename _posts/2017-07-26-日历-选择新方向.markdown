@@ -1,0 +1,55 @@
+---
+layout:     post
+title:      "时间选择重新出发"
+subtitle:   " \"app \""
+date:       2017-07-26 13:14:00
+author:     "Smm"
+header-img: "img/rili.jpg"
+tags:
+    - app
+---
+
+
+最近做一下小的东西都会遇到日历或者日期选择的方向。
+
+上次的课程中日历的显示。也没有能在后面的项目中重复利用。
+
+
+最后选择了
+![效果](http://shimengmeng.win/img/project/shijian.gif)
+ 和
+![效果](http://shimengmeng.win/img/project/shijian3.gif)
+
+中的显示效果。
+主要用它有几个好处。
+
+
+> 1，可以换颜色的不同效果。
+
+> 2，可以选择那些日期可以进行选择。
+
+还有很多不同数据显示
+
+ ![时间](http://shimengmeng.win/img/project/shijian2.gif)
+
+同样是只能选择一个月之内的时间。
+再把时间转换为想要的数据。进行选择。
+
+之前自己写的，DatePicker 加 TimePicker 
+实现的，当时有这么大的毅力给总监看效果。 现在想一想真的羞死了。
+效果如下
+ ![时间](http://shimengmeng.win/img/project/shijan4.png)
+
+
+后来在从git上看到 很多选择，自己收集下来，
+
+https://github.com/mrfluency/Time-Selector
+
+所有项目的聚集地。很好的demo 群。就到学习了。
+https://github.com/dalong982242260/AndroidCalendar
+
+[日历聚集地](https://github.com/dalong982242260/AndroidCalendar)
+
+从而萌生了material 一系列的控件。
+发现搜material 日历。 material banner 以及 material spinner
+都有意外的收获和之前没有感受。

@@ -1,0 +1,116 @@
+---
+layout:     post
+title:      "tomcat 配置多个域名文件"
+subtitle:   " \" 学习 \""
+date:       2019-04-12 8:35:10
+author:     "Smm"
+header-img: "img/003.jpg"
+tags:
+    - 教程
+---
+
+
+
+
+
+## tomcat 配置多个项目
+
+
+
+例如  有三个 项目 
+
+1，pc.xxx.com
+
+2， mobile.xxx.com
+
+3， web.xxx.com  
+
+项目分别用三个tomcat 也可以，用一个tomcat 也可以
+
+liunx 配置三个 tomcat 
+
+准备三个tomcat ，然后给三个tomcat 重命名，tomcat_pc、tomcat_mobile、tomcat_web 分别对应8081 8082 8083 三个 不同 端口号，这个应该很好配置吧。
+
+liunx 启动三个应该是不可以的，然后在配置 liunx 服务器
+
+修改vi /etc/profile
+
+export JAVA_HOME=/usr/java/jdk1.7.0_80  
+export CLASSPATH=.:$JAVA_HOME/lib/dt.jar:$JAVA_HOME/lib/tools.jar  
+export PATH=$JAVA_HOME/bin:$PATH 
+########## tomcat_pc ###########
+CATALINA_PC_BASE=/usr/local/tomcat_pc
+CATALINA_PC_HOME=/usr/local/tomcat_pc
+TOMCAT_PC_HOME=/usr/local/tomcat_pc
+export CATALINA_PC_BASE CATALINA_PC_HOME TOMCAT_PC_HOME
+########## tomcat_pc ############
+########## tomcat_mobile ###########
+CATALINA_MOBILE_BASE=/usr/local/tomcat_mobile
+CATALINA_MOBILE_HOME=/usr/local/tomcat_mobile
+TOMCAT_MOBILE_HOME=/usr/local/tomcat_mobile
+export CATALINA_MOBILE_BASE CATALINA_MOBILE_HOME TOMCAT_MOBILE_HOME
+########## tomcat_mibile########
+
+########## tomcat_web ###########
+CATALINA_WEB_BASE=/usr/local/tomcat_web
+CATALINA_WEB_HOME=/usr/local/tomcat_web
+TOMCAT_WEB_HOME=/usr/local/tomcat_web
+export CATALINA_WEB_BASE CATALINA_WEB_HOME TOMCAT_WEB_HOME
+########## tomcat_web########
+
+保存退出；
+
+source /etc/profile ;(使配置信息生效！)
+
+
+
+然后配置三个tomcat 
+
+例如tomcat_pc 
+
+修改对应tomcat及tomcat1下conf目录下的server.xml文件，指定其对应端口号：
+
+  tomcat的server.xml未修改；
+
+  tomcat1的server.xml进行修改：对应的端口修改可自定义
+
+修改端口号，然后在配置主要部分
+
+修改Tomcat的${tomcat}/bin下的启动脚本startup.sh文件：
+
+tomcat配置如下：
+
+```xml
+export JAVA_HOME=/usr/Java/jdk1.7.0_80 
+export PATH=$PATH:$JAVA_HOME/bin 
+export CLASSPATH=$JAVA_HOME/lib 
+export CATALINA_HOME=$CATALINA_PC_BASE 
+export CATALINA_BASE=$CATALINA_PC_BASE
+```
+
+其他tomcat 一样。其实我只配置了一个，另外两个没有配置好像也可以，如果要配置，直接复制就行了，用命令mv 就很快了。
+
+然后在用nginx 配置不同的域名对于不同ip 地址。
+
+不同ip对于不同的域名，由此实现了tomcat 配置多个域名 配合nginx 
+
+nginx 配置多个域名。
+
+里面没有说明下载jdk ，配置jdk ，tomcat 下载和配置，移动和解压软件等功能，这个需要自己去慢慢去探索，步骤要熟悉，思路有了，步骤会了，慢慢就会了。
+
+nginx 可以配置，负载均衡，配置多个同一样的项目，
+
+也可以反向代理，配置多个域名就是反向代理，把多个端口号方向配置到域名里面。
+
+
+
+      server {
+            listen       80;
+            server_name  www.123.com;
+            location / {
+            proxy_pass http://127.0.0.1:8081;
+            index  index.html index.htm index.jsp;
+        }
+    }
+用docker 可以，用普通下载也开始可以的。
+

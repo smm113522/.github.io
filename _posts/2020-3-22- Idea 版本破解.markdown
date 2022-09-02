@@ -1,0 +1,92 @@
+---
+layout:     post
+title:      "Idea 版本破解"
+subtitle:   " \" 学习 \""
+date:       2020-3-22 21:23:10
+author:     "Smm"
+header-img: "img/004.jpg"
+tags:
+    - 总结
+---
+
+
+
+
+## Idea 版本破解
+
+MAC IntelliJ IDEA 2019.1破解 其实各个 版本都没有问题，2020版本好像不行，所以换版本了，例如18 和19 版本都可以。。
+
+
+
+IntelliJ IDEA 下载
+
+官网下载地址：[https://www.jetbrains.com/idea/download/#section=mac](https://www.jetbrains.com/idea/download/#section=mac)
+
+
+
+安装
+
+如果在安装过程中出现文件已损坏可做如下操作
+
+打开终端输入spctl --master-disable，然后打开系统偏好设置，找到安全性与隐私，允许所有来源
+
+[破解]()
+
+下载后就可以破解了
+
+先下载破解jar包 链接:[https://pan.baidu.com/s/1sUdjF7gX_CwYyFUR-Y835Q](https://links.jianshu.com/go?to=https%3A%2F%2Fpan.baidu.com%2Fs%2F1sUdjF7gX_CwYyFUR-Y835Q) 密码:iapt
+
+下载好了的 jar包后 放到 idea 的 bin 目录下
+
+在应用程序中找到IntelliJ IDEA，然后右键显示包内容，找到bin文件
+
+## 修改 bin 目录下的 idea.vmoptions 文件
+
+在 idea.vmoptions 文件的最后一行添加如下的配置，根据你保存的文件名自行变更
+
+-javaagent:../bin/jetbrains-agent.jar
+
+
+
+## 修改hosts文件内的配置内容
+
+#### 1.在终端使用如下代码进入hosts配置
+
+sudo vi /etc/hosts
+
+#### 2. 然后在文件最后添加如下内容
+
+0.0.0.0 account.jetbrains.com
+
+
+
+### 打开 idea，注册选择License server方式
+
+地址填入：[http://jetbrains-license-server](http://jetbrains-license-server)
+
+地址填入：[http://fls.jetbrains-agent.com](http://fls.jetbrains-agent.com/)
+
+
+
+[完成]()
+
+现在打开你的 idea ，看一下是不是注册成功了。
+
+
+
+我选择的是第二个地址，如果错误，就多点击几次，我好像点击三次成功了。
+
+
+
+上面的所做的步骤，对windows和mac 都是一样的。
+
+
+
+## 最简单方式
+
+有一个jar 包直接导入idea 中，安装就可以破解。。
+
+
+
+
+

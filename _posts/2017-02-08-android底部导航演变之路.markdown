@@ -1,0 +1,597 @@
+---
+layout:     post
+title:      "android底部导航演变之路"
+subtitle:   " \"底部导航\""
+date:       2017-02-28 10:52:00
+author:     "Smm"
+header-img: "img/post-bg-2015.jpg"
+tags:
+    - 教程
+---
+
+## 写在前面的话
+作为android开发者，没有分享过android 方面的东西，太惭愧了。
+今天写一下自己在开发过程中一些演变的过程吧，对于自学者，都会有一下不好的习惯，那就是代码太乱，先实现功能为主，
+不会及时的去优化代码以及重构代码，还有不去积累一些东西，所以写代码多还不说，还没有进步性。导致如果想实现一个功能的话，就会一直
+反倒自己之前写的，重新写，比之前好很多，但是如果出现新的解决方法，在推翻重新写，大多数的通病吧。这次就是我推翻重新写的一些技巧吧。
+因为是自己自学的一些东西，难免会忽略一些东西，请提醒一下。写的不对的地方请指出。这次写一些底部导航，底部导航
+一直贯穿整个app，在整个app 中占据着很大的部分，也是手机经过最多，最大的地方。
+下面是他们
+
+
+![图片地址](http://7xib7m.com1.z0.glb.clouddn.com/img/article/2016/10-27/0-LGs-zf1C4Ht4svsF.png)
+## 底部导航 演变 过程
+>RadioGroup + RadioButton 到 AdvancedPagerSlidingTabStrip 再到 BottomNavigationView
+
+**RadioGroup + RadioButto**
+- layout.xml 代码
+
+
+``` 
+<?xml version="1.0" encoding="utf-8"?>  
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"  
+    android:orientation="vertical"  
+    android:layout_width="match_parent"  
+    android:layout_height="match_parent">  
+  
+    <FrameLayout  
+        android:id="@id/fragment"  
+        android:layout_height="match_parent"  
+        android:layout_width="match_parent"  
+        android:background="@color/white"  
+        android:layout_weight="1">  
+    </FrameLayout>  
+  
+    <RadioGroup  
+        android:id="@id/radioGroup"  
+        android:layout_width="match_parent"  
+        android:layout_height="wrap_content"  
+        android:orientation="horizontal">  
+  
+        <RadioButton  
+            style="@style/MTabStyle"  
+            android:layout_width="match_parent"  
+            android:layout_height="wrap_content"  
+            android:text="首页"  
+            android:checked="true"  
+            android:drawableTop="@drawable/ic_home"  
+            android:id="@id/tab_one" />  
+        <RadioButton  
+            style="@style/MTabStyle"  
+            android:layout_width="match_parent"  
+            android:layout_height="wrap_content"  
+            android:text="附近运力"  
+            android:drawableTop="@drawable/ic_yunli"  
+            android:id="@id/tab_two" />  
+        <RadioButton  
+            style="@style/MTabStyle"  
+            android:layout_width="match_parent"  
+            android:layout_height="wrap_content"  
+            android:text="末端网点"  
+            android:drawableTop="@drawable/ic_nearby"  
+            android:id="@id/tab_three" />  
+        <RadioButton  
+            style="@style/MTabStyle"  
+            android:layout_width="match_parent"  
+            android:layout_height="wrap_content"  
+            android:text="个人中心"  
+            android:drawableTop="@drawable/ic_info"  
+            android:id="@id/tab_four" />  
+    </RadioGroup>  
+</LinearLayout>
+```
+-  图片和颜色变化
+
+```
+<?xml version="1.0" encoding="utf-8"?>  
+<selector  
+  xmlns:android="http://schemas.android.com/apk/res/android">  
+	<item android:state_checked="true" android:drawable="@color/main_tab_bg_c" />  
+	<item android:state_selected="true" android:drawable="@color/main_tab_bg_c" />  
+	<item android:drawable="@color/main_tab_bg" />  
+</selector>  
+
+```
+
+- activity.java 代码
+
+```
+public class MainActivity extends FragmentActivity implements RadioGroup.OnCheckedChangeListener{  
+  
+  
+    private static final int RESULT_LOGIN = 1;  
+  
+    @ViewInject(R.id.radioGroup)  
+    RadioGroup radioGroup;  
+  
+    Fragment fragment;  
+  
+    @Override  
+    protected void onCreate(Bundle savedInstanceState) {  
+        super.onCreate(savedInstanceState);  
+        requestWindowFeature(1);  
+        setContentView(R.layout.main);  
+        ViewUtils.inject(this);  
+  
+        radioGroup.setOnCheckedChangeListener(this);  
+        fragment = getSupportFragmentManager().findFragmentById(R.id.fragment);  
+  
+        if (fragment == null) {  
+            fragment = WaggonFragment.newInstance();  
+            getSupportFragmentManager().beginTransaction().add(R.id.fragment, HomeFragment.newInstance()).commit();  
+        }  
+    }  
+  
+  
+    @Override  
+    public void onCheckedChanged(RadioGroup radioGroup, int i) {  
+        switch (i){  
+            case R.id.tab_one:{  
+                fragment = ContentFragment.newInstance();  
+            }  
+            break;  
+            case R.id.tab_two:{  
+                fragment = ContentFragment.newInstance();  
+            }  
+            break;  
+            case R.id.tab_three:{  
+                fragment = ContentFragment.newInstance();  
+            }  
+            break;  
+            case R.id.tab_four:{  
+                fragment = ContentFragment.newInstance();  
+            }  
+            break;  
+        }  
+        if(fragment != null){  
+            getSupportFragmentManager().beginTransaction().replace(R.id.fragment, fragment).commit();  
+        }  
+    }  
+}
+
+```
+
+- content 内容页面
+
+```
+public class ContentFragment extends Fragment {  
+  
+	public static Fragment newInstance() {  
+		ContentFragment f = new ContentFragment();  
+		return f;  
+	}  
+  
+	@Override  
+	public void onCreate(Bundle savedInstanceState) {  
+		super.onCreate(savedInstanceState);  
+	}  
+  
+	@Override  
+	public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {  
+  
+  
+		View v = inflater.inflate(R.layout.main_content, container, false);  
+		ViewUtils.inject(this, v);  
+  
+		return v;  
+	}  
+}  
+
+```
+
+基本上就是这些，还会写了一些复杂的，像viewPager + RadioGroup  和 TabWidget  的使用。
+TabLayout 也可以实现，还有一个TabItem 中，从源码来看里面可以插入 图片的。
+可以参考一下
+1.<http://blog.csdn.net/MXiaoChao/article/details/52662234>
+2.<http://www.jianshu.com/p/2b2bb6be83a8>
+3.<http://www.jianshu.com/p/116f87abdaea> 这几篇blog。
+
+**AdvancedPagerSlidingTabStrip**
+
+案例和demo 都在<https://github.com/HomHomLin/AdvancedPagerSlidingTabStrip> 中，里面有几个案例。
+相对来说很好了。
+	
+
+ - layout 中代码
+ 
+ ```
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+    <com.lhh.apst.library.AdvancedPagerSlidingTabStrip
+        android:id="@+id/tabs"
+        android:layout_width="match_parent"
+        android:layout_height="55dp"
+        style="@style/pagertab_icon_style"
+        android:layout_alignParentBottom="true"
+        android:fillViewport="false"/>
+
+    <com.lhh.apst.advancedpagerslidingtabstrip.APSTSViewPager
+        android:id="@+id/vp_main"
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent"
+        android:layout_above="@id/tabs"/>
+</RelativeLayout>
+ 
+ ```
+ 
+ - main java 代码
+ 
+ ```
+public class CustomTabActivity extends ActionBarActivity implements ViewPager.OnPageChangeListener{
+
+    public CustomPagerSlidingTabStrip mAPSTS;
+    public APSTSViewPager mVP;
+
+    private static final int VIEW_FIRST 		= 0;
+    private static final int VIEW_SECOND	    = 1;
+    private static final int VIEW_THIRD       = 2;
+    private static final int VIEW_FOURTH    = 3;
+
+    private static final int VIEW_SIZE = 4;
+
+    private Context mContext;
+
+    private FirstFragment mFirstFragment = null;
+    private SecondFragment mSecondFragment = null;
+    private ThirdFragment mThirdFragment = null;
+    private FourthFragment mFourthFragment = null;
+
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        mContext = this;
+        setContentView(R.layout.activity_custom_tab);
+        findViews();
+        init();
+    }
+
+    private void findViews(){
+        mAPSTS = (CustomPagerSlidingTabStrip)findViewById(R.id.tabs);
+        mVP = (APSTSViewPager)findViewById(R.id.vp_main);
+    }
+
+    private void init(){
+        mVP.setOffscreenPageLimit(VIEW_SIZE);
+        FragmentAdapter adapter = new FragmentAdapter(getSupportFragmentManager());
+
+        mVP.setAdapter(new FragmentAdapter(getSupportFragmentManager()));
+
+        adapter.notifyDataSetChanged();
+        mAPSTS.setViewPager(mVP);
+        mAPSTS.setOnPageChangeListener(this);
+    }
+
+    @Override
+    public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
+
+    }
+
+    @Override
+    public void onPageSelected(int position) {
+
+    }
+
+    @Override
+    public void onPageScrollStateChanged(int state) {
+
+    }
+
+    public class FragmentAdapter extends FragmentStatePagerAdapter implements CustomPagerSlidingTabStrip.CustomTabProvider{
+
+        protected LayoutInflater mInflater;
+
+        public FragmentAdapter(FragmentManager fm) {
+            super(fm);
+            mInflater = LayoutInflater.from(mContext);
+        }
+
+        @Override
+        public Fragment getItem(int position) {
+            if(position >= 0 && position < VIEW_SIZE){
+                switch (position){
+                    case  VIEW_FIRST:
+                        if(null == mFirstFragment)
+                            mFirstFragment = FirstFragment.instance();
+                        return mFirstFragment;
+
+                    case VIEW_SECOND:
+                        if(null == mSecondFragment)
+                            mSecondFragment = SecondFragment.instance();
+                        return mSecondFragment;
+
+                    case VIEW_THIRD:
+                        if(null == mThirdFragment)
+                            mThirdFragment = ThirdFragment.instance();
+                        return mThirdFragment;
+
+                    case VIEW_FOURTH:
+                        if(null == mFourthFragment)
+                            mFourthFragment = FourthFragment.instance();
+                        return mFourthFragment;
+                    default:
+                        break;
+                }
+            }
+            return null;
+        }
+
+        @Override
+        public int getCount() {
+            return VIEW_SIZE;
+        }
+
+        @Override
+        public CharSequence getPageTitle(int position) {
+            if(position >= 0 && position < VIEW_SIZE){
+                switch (position){
+                    case  VIEW_FIRST:
+                        return  "FIRST";
+                    case  VIEW_SECOND:
+                        return  "SECOND";
+                    case  VIEW_THIRD:
+                        return  "THIRD";
+                    case  VIEW_FOURTH:
+                        return  "FOURTH";
+                    default:
+                        break;
+                }
+            }
+            return null;
+        }
+
+        @Override
+        public View getSelectTabView(int position, View convertView) {
+            if (convertView == null){
+                convertView = mInflater.inflate(R.layout.custom_select_tab, null);
+            }
+
+            TextView tv = ViewHolder.get(convertView, R.id.tvTab);
+
+            tv.setText(getPageTitle(position));
+
+            return convertView;
+        }
+
+        @Override
+        public View getDisSelectTabView(int position, View convertView) {
+            if (convertView == null){
+                convertView = mInflater.inflate(R.layout.custom_disselect_tab, null);
+            }
+
+            TextView tv = ViewHolder.get(convertView, R.id.tvTab);
+
+            tv.setText(getPageTitle(position));
+
+            return convertView;
+        }
+    }
+}
+
+ ```
+ 
+ 在之前使用的是SlidingTabLayout.java <http://blog.csdn.net/salmanit/article/details/42642575>
+里面功能和上述一样。在官网上可以看到源代码。	
+
+**BottomNavigationView**
+
+ - main 代码
+ 
+ 
+ ```
+ public class JibenDemoActivity extends BaseActivity {
+
+    @BindView(R.id.text)
+    TextView text;
+    @BindView(R.id.navigation)
+    BottomNavigationView navigation;
+
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_jibendemo);
+        ButterKnife.bind(this);
+        navigation.setOnNavigationItemSelectedListener(
+                new BottomNavigationView.OnNavigationItemSelectedListener() {
+                    @Override
+                    public boolean onNavigationItemSelected(MenuItem item) {
+                        text.setText(item.getTitle().toString().toUpperCase());
+                        return true;
+                    }
+                });
+    }
+}
+ ```
+ 
+ -xml 中代码
+
+ ```
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:orientation="vertical"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <TextView
+        android:id="@+id/text"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerInParent="true"
+        android:text="Hello World!"
+        android:textSize="36sp"/>
+
+    <android.support.design.widget.BottomNavigationView
+        android:id="@+id/navigation"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        app:itemBackground="@android:color/black"
+        app:itemIconTint="@android:color/white"
+        app:itemTextColor="@android:color/white"
+        app:menu="@menu/navigation"/>
+
+</RelativeLayout>
+
+ ```
+ - menu 中代码
+ 
+ ```
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+    <item
+        android:id="@+id/add"
+        android:icon="@drawable/common_btn_kehu_pr"
+        android:title="call" />
+    <item
+        android:id="@+id/delete"
+        android:icon="@drawable/common_btn_shouye_pr"
+        android:title="message" />
+    <item
+        android:id="@+id/setting"
+        android:icon="@drawable/common_btn_wode_pr"
+        android:title="setting" />
+
+    <item
+        android:id="@+id/me"
+        android:icon="@drawable/common_btn_xiangmu_pr"
+        android:title="me"/>
+</menu>
+
+ ```
+ ![图片演示](http://smm113522.github.io/img/project/Screen_20160216163404.png)
+ 
+ 以上就结束了。
+ 但也有人 写了自定义控件，和他是相同的。
+ 
+ 
+ 
+- java 代码 
+ 
+```
+package com.demo.smm.bottomnavigationview;
+import android.os.Bundle;
+import android.support.annotation.Nullable;
+import android.widget.LinearLayout;
+import android.widget.TextView;
+import com.ashokvarma.bottomnavigation.BottomNavigationBar;
+import com.ashokvarma.bottomnavigation.BottomNavigationItem;
+import butterknife.BindView;
+import butterknife.ButterKnife;
+public class BottomNaviBarActivity extends BaseActivity implements BottomNavigationBar.OnTabSelectedListener {
+    @BindView(R.id.tb)
+    TextView mTextView;
+    @BindView(R.id.bottom_navigation_bar)
+    BottomNavigationBar bottomNavigationBar;
+    int lastSelectedPosition = 0;
+    @Override
+    protected void onCreate(@Nullable Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_bottonnavibar);
+        ButterKnife.bind(this);
+
+        bottomNavigationBar
+                .addItem(new BottomNavigationItem(R.drawable.common_btn_kehu_pr, "位置").setActiveColor(android.R.color.holo_orange_dark))
+                .addItem(new BottomNavigationItem(R.drawable.common_btn_shouye_pr, "发现").setActiveColor(android.R.color.holo_blue_bright))
+                .addItem(new BottomNavigationItem(R.drawable.common_btn_wode_pr, "爱好").setActiveColor(android.R.color.holo_green_dark))
+                .addItem(new BottomNavigationItem(R.drawable.common_btn_xiangmu_pr, "图书").setActiveColor(android.R.color.holo_blue_light))
+                .setFirstSelectedPosition(lastSelectedPosition )
+                .initialise();
+
+        bottomNavigationBar.setTabSelectedListener(this);
+
+    }
+
+    @Override
+    public void onTabSelected(int position) {
+        switch (position) {
+            case 0:
+                mTextView.setText("位置");
+                break;
+            case 1:
+                mTextView.setText("位置");
+                break;
+            case 2:
+                mTextView.setText("爱好");
+                break;
+            case 3:
+                mTextView.setText("图书");
+                break;
+        }
+    }
+
+    @Override
+    public void onTabUnselected(int position) {
+
+    }
+
+    @Override
+    public void onTabReselected(int position) {
+
+    }
+}
+ ```
+
+ 
+** layout 代码 **
+
+ 
+ ```
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:background="@android:color/white"
+    android:layout_height="match_parent" >
+    <TextView
+        android:id="@+id/tb"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:text="ddd"
+        android:gravity="center"
+        android:textSize="28dp"
+        android:textColor="@android:color/black"
+        android:orientation="vertical" />
+
+    <com.ashokvarma.bottomnavigation.BottomNavigationBar
+        android:id="@+id/bottom_navigation_bar"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@color/colorPrimary"
+        android:layout_alignParentBottom="true" />
+		
+</RelativeLayout>
+ 
+```
+ 
+ **结果**
+ 
+ 当然也可以对他重新封装了既保留原来的，有多处几个对外的方法，可以去掉 图片下文字的不隐藏问题。 
+ 
+**刚开始的**
+ 
+ ![图片演示](http://smm113522.github.io/img/project/kaishi.gif)
+ 
+** 最后的 **
+ ![图片演示](http://smm113522.github.io/img/project/end.gif)
+ 
+ 更多上滑出现，下滑 隐藏，更多ui 交互效果就解决了。
+ 底部菜单加上fragment 中 让fragment 加载太多东西了，还有很多要优化地方，对fragment 减少他的压力处理等。
+ 太对代码在上面了，反而觉得不好了，也没有像样的demo出来，是很是失败。
+ 
+ 以上代码来自 <https://github.com/smm113522/MaterialDesign/tree/demo/BottomNavigationView> 自己写的一些，也有掏来的。
+ 
+ 
+## 结束语
+ 
+　　android 控件很多，来处理它很多 ，在移动界面设计中，使用各种菜单控件来简化界面，对设计师来说很有吸引力——特别是在小屏幕的设备上。但是，将 app 的核心部分隐藏在这些菜单里，可能会对实际使用产生负面的影响。
+
+　　若不在视线里，便不在感知中
+
+　　为了简化 Polar 的界面设计，我们将之前的标签式菜单改成了切换式菜单。改版后的菜单看起来更「干净」，但接下来，菜单的日常使用频次却发生了暴跌。
+由于移动设备的屏幕大小有限，不能把所有的东西都直接放置在界面上。这导致移动界面的设计变得具有挑战性。
+
+　　不同于大屏幕的桌面电脑可以让我们把每一个功能放在上面，移动设备要求我们必须做一些取舍：有哪些东西真的值得摆在上面?
+
+　　回答这个问题需要弄清楚一个关键——究竟是哪些东西直接影响着你的用户和生意。换句话说，这要求产品设计者好好地思考，然后再设计。
+ 

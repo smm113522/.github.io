@@ -1,0 +1,48 @@
+---
+layout:     post
+title:      "个人博客解说"
+subtitle:   " \"个人博客解说\""
+date:       2017-01-13 10:40:00
+author:     "Smm"
+header-img: "img/post-bg-2015.jpg"
+tags:
+    - 教程
+---
+# 个人博客 解说 [地址](https://smm113522.github.io/)
+
+> 所具备的条件开始说吧 
+> 还有一些从入门到放弃的毅力
+
+# Hux Theme 里面有哪些东西要学习
+
+    * git 的使用和上传 
+    * GitHub Pages 的环境搭建
+    * 多说的配置和使用 [多说地址](http://duoshuo.com/)
+    * 百度统计的使用 [百度统计地址](http://tongji.baidu.com/)
+    * Google统计的使用[google统计地址](https://analytics.google.com/) 
+    * js的理解和查看。
+    * markdown 语法的学习。
+
+# Gux 的配置
+
+    1. 每个文件的理解，然后进行修改，
+    2. 修改配置文件就可以
+    3. post 里面的文件是所有文章的列表
+    3. head和fooder的处理
+    4. 有些js 安全性的升级，需要去修改。
+   
+
+> 这里是个人思想和作者没有关系;
+> 作者写 的代码我也是自己去理解;
+
+# 其他问题
+
+    1. 域名地址修改
+    2. 内容添加。
+    3. 评论不可以额
+    4. 统计不可以
+    5. git 上传是否被其他人修改。
+    6. tag 的使用。
+    7. markdown 的使用
+
+#    解答 请issue中提问。

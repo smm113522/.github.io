@@ -1,0 +1,450 @@
+---
+layout:     post
+title:      "webview 那些事"
+subtitle:   " \" 总结 \""
+date:       2018-03-01 14:16:10
+author:     "Smm"
+header-img: "img/007.jpg"
+tags:
+    - 总结
+---
+
+
+## 前言
+
+最新项目中越来越多用到webview ，看到电商类的app 对这个要求更高了，所有 我们用的目的是为了更好
+修复 那些易变化的，有更多扩展性的。
+
+最近 主要用到一下对webview 的研究吧。
+1，在webview 上 添加 新的原生 view ，我添加的视频 ，播放用原生的播放器，这样对webview 依赖又不大。
+2，js 和webview 通信。 多个方法 的切换吧，还有
+3，webview 的执行的刷新
+4，webview 显示进度的控制
+5，webview 和js 交互参数加密 和解密 AES加密 使用
+6，容器 中添加webview 
+7，外url 点击 处理
+8, webview 点击 图片浏览器打开
+
+## 基础
+
+webview 基础 框架
+
+![](https://i.imgur.com/E3FsTvt.jpg)
+
+
+Android的Webview在低版本和高版本采用了不同的webkit版本内核，4.4后直接使用了Chrome。
+
+#### 作用
+显示和渲染Web页面
+直接使用html文件（网络上或本地assets中）作布局
+可和JavaScript交互调用
+WebView控件功能强大，除了具有一般View的属性和设置外，还可以对url请求、页面加载、渲染、页面交互进行强大的处理。
+#### 使用介绍
+一般来说Webview可单独使用，可联合其子类一起使用，所以接下来，我会介绍：
+
+Webview自身的常见方法；
+Webview的最常用的子类 
+（WebSettings类、WebViewClient类、WebChromeClient类)
+Android和Js的交互
+
+
+#### begin
+
+首先是在
+AndroidManifest.xml
+
+	<uses-permission android:name="android.permission.INTERNET"/>
+
+否则回报Web page not available错误。
+
+加载方法
+//load本地
+mWebView.loadUrl("file:///android_asset/hellotest.html");
+
+//load在线
+//mWebView.loadUrl("http://www.google.com");
+
+或者
+ 		
+		StringBuilder sb = new StringBuilder();
+	    // 拼接一段HTML代码
+	    sb.append("<html>");
+	    sb.append("<head>");
+	    sb.append("<title> 欢迎您 </title>");
+	    sb.append("</head>");
+	    sb.append("<body>");
+	    sb.append("<h2> 欢迎您访问<a href=\"http://www.cctv.com\">"
+	            + "Java联盟</a></h2>");
+	    sb.append("</body>");
+	    sb.append("</html>");
+	
+	    // 使用简单的loadData方法会导致乱码，可能是Android API的Bug
+	   //  show.loadData(sb.toString() , "text/html" , "utf-8");
+	
+	   //  加载、并显示HTML代码
+	    show.loadDataWithBaseURL(null, sb.toString(), "text/html" , "utf-8", null);
+
+1. WebView的状态
+
+
+
+	//激活WebView为活跃状态，能正常执行网页的响应
+	webView.onResume() ；
+	
+	//当页面被失去焦点被切换到后台不可见状态，需要执行onPause
+	//通过onPause动作通知内核暂停所有的动作，比如DOM的解析、plugin的执行、JavaScript执行。
+	webView.onPause()；
+	
+	//当应用程序(存在webview)被切换到后台时，这个方法不仅仅针对当前的webview而是全局的全应用程序的webview
+	//它会暂停所有webview的layout，parsing，javascripttimer。降低CPU功耗。
+	webView.pauseTimers()
+	//恢复pauseTimers状态
+	webView.resumeTimers()；
+	
+	//销毁Webview
+	//在关闭了Activity时，如果Webview的音乐或视频，还在播放。就必须销毁Webview
+	//但是注意：webview调用destory时,webview仍绑定在Activity上
+	//这是由于自定义webview构建时传入了该Activity的context对象
+	//因此需要先从父容器中移除webview,然后再销毁webview:
+	rootLayout.removeView(webView); 
+	webView.destroy();
+
+
+##### WebSettings类
+
+	//声明WebSettings子类
+	WebSettings webSettings = webView.getSettings();
+	
+	//如果访问的页面中要与Javascript交互，则webview必须设置支持Javascript
+	webSettings.setJavaScriptEnabled(true);  
+	
+	//支持插件
+	webSettings.setPluginsEnabled(true); 
+	
+	//设置自适应屏幕，两者合用
+	webSettings.setUseWideViewPort(true); //将图片调整到适合webview的大小 
+	webSettings.setLoadWithOverviewMode(true); // 缩放至屏幕的大小
+	
+	//缩放操作
+	webSettings.setSupportZoom(true); //支持缩放，默认为true。是下面那个的前提。
+	webSettings.setBuiltInZoomControls(true); //设置内置的缩放控件。若为false，则该WebView不可缩放
+	webSettings.setDisplayZoomControls(false); //隐藏原生的缩放控件
+	
+	//其他细节操作
+	webSettings.setCacheMode(WebSettings.LOAD_CACHE_ELSE_NETWORK); //关闭webview中缓存 
+	webSettings.setAllowFileAccess(true); //设置可以访问文件 
+	webSettings.setJavaScriptCanOpenWindowsAutomatically(true); //支持通过JS打开新窗口 
+	webSettings.setLoadsImagesAutomatically(true); //支持自动加载图片
+	webSettings.setDefaultTextEncodingName("utf-8");//设置编码格式
+
+
+##### 设置WebView缓存
+
+
+	当加载 html 页面时，WebView会在/data/data/包名目录下生成 database 与 cache 两个文件夹
+	请求的 URL记录保存在 WebViewCache.db，而 URL的内容是保存在 WebViewCache 文件夹下
+	是否启用缓存：
+	//优先使用缓存: 
+	WebView.getSettings().setCacheMode(WebSettings.LOAD_CACHE_ELSE_NETWORK); 
+	    //缓存模式如下：
+	    //LOAD_CACHE_ONLY: 不使用网络，只读取本地缓存数据
+	    //LOAD_DEFAULT: （默认）根据cache-control决定是否从网络上取数据。
+	    //LOAD_NO_CACHE: 不使用缓存，只从网络获取数据.
+	    //LOAD_CACHE_ELSE_NETWORK，只要本地有，无论是否过期，或者no-cache，都使用缓存中的数据。
+	
+	//不使用缓存: 
+	WebView.getSettings().setCacheMode(WebSettings.LOAD_NO_CACHE);
+	  
+	结合使用（离线加载）
+	if (NetStatusUtil.isConnected(getApplicationContext())) {
+	    webSettings.setCacheMode(WebSettings.LOAD_DEFAULT);//根据cache-control决定是否从网络上取数据。
+	} else {
+	    webSettings.setCacheMode(WebSettings.LOAD_CACHE_ELSE_NETWORK);//没网，则从本地获取，即离线加载
+	}
+	
+	webSettings.setDomStorageEnabled(true); // 开启 DOM storage API 功能
+	webSettings.setDatabaseEnabled(true);   //开启 database storage API 功能
+	webSettings.setAppCacheEnabled(true);//开启 Application Caches 功能
+	
+	String cacheDirPath = getFilesDir().getAbsolutePath() + APP_CACAHE_DIRNAME;
+	webSettings.setAppCachePath(cacheDirPath); //设置  Application Caches 缓存目录
+
+注意： 每个 Application 只调用一次 WebSettings.setAppCachePath()，WebSettings.setAppCacheMaxSize()
+	
+
+##### WebViewClient类
+
+	 webView.setWebViewClient(new WebViewClient(){
+	      @Override
+	      public boolean shouldOverrideUrlLoading(WebView view, String url) {
+	          view.loadUrl(url);
+	      return true;
+	      }
+	  });
+
+
+还有 基本的方法
+
+	/** 
+	 * 在开始加载网页时会回调 
+	 */  
+	public void onPageStarted(WebView view, String url, Bitmap favicon)   
+	/** 
+	 * 在结束加载网页时会回调 
+	 */  
+	public void onPageFinished(WebView view, String url)  
+	/** 
+	 * 拦截 url 跳转,在里边添加点击链接跳转或者操作 
+	 */  
+	public boolean shouldOverrideUrlLoading(WebView view, String url)  
+	/** 
+	 * 加载错误的时候会回调，在其中可做错误处理，比如再请求加载一次，或者提示404的错误页面 
+	 */  
+	public void onReceivedError(WebView view, int errorCode,String description, String failingUrl)  
+	/** 
+	 * 当接收到https错误时，会回调此函数，在其中可以做错误处理 
+	 */  
+	public void onReceivedSslError(WebView view, SslErrorHandler handler,SslError error)  
+	/** 
+	 * 在每一次请求资源时，都会通过这个函数来回调 
+	 */  
+	public WebResourceResponse shouldInterceptRequest(WebView view,  
+	        String url) {  
+	    return null;  
+	}  
+
+onPageStarted 一般为开始加载过程 等待加载
+
+onPageFinished 加载完成
+
+可以通过重写shouldOverrideUrlLoading，可以实现对网页中超链接的拦截； 
+
+将外部的连接转成自己的
+
+为了好的情况下，还可以启动自己，重新来一遍url
+
+	public boolean shouldOverrideUrlLoading(WebView view, String url) {  
+	   if (url.contains("blog.csdn.net")){  
+	        view.loadUrl("http://www.baidu.com");  
+	    }else {  
+	        view.loadUrl(url);  
+	    }  
+	   return true;  
+	}  
+
+
+onReceivedError 方法 一般为错误的情况下返回来的，所有可以自己定义好的界面了。
+
+
+
+##### WebChromeClient类
+
+获取webview title 
+
+	@Override  
+	public void onReceivedTitle(WebView view, String title) {  
+	    titleText.setText(title);  
+	}  
+
+获取webview 进度条
+
+	@Override  
+	public void onProgressChanged(WebView view, int newProgress) {  
+	    // 当WebView进度改变时更新窗口进  
+	    if (progressbar.getVisibility() != View.VISIBLE&&newProgress != 100) {  
+	            progressbar.setVisibility(View.VISIBLE);  
+	    }  
+	    progressbar.setProgress(newProgress);  
+	    super.onProgressChanged(view, newProgress);  
+	} 
+
+响应js中的alert
+
+	// 由于设置了弹窗检验调用结果,所以需要支持js对话框
+	    // webview只是载体，内容的渲染需要使用webviewChromClient类去实现
+	    // 通过设置WebChromeClient对象处理JavaScript的对话框
+	    //设置响应js 的Alert()函数
+	    mWebView.setWebChromeClient(new WebChromeClient() {
+	        @Override
+	        public boolean onJsAlert(WebView view, String url, String message, final JsResult result) {
+	            AlertDialog.Builder b = new AlertDialog.Builder(MainActivity.this);
+	            b.setTitle("Alert");
+	            b.setMessage(message);
+	            b.setPositiveButton(android.R.string.ok, new DialogInterface.OnClickListener() {
+	                @Override
+	                public void onClick(DialogInterface dialog, int which) {
+	                    result.confirm();
+	                }
+	            });
+	            b.setCancelable(false);
+	            b.create().show();
+	            return true;
+	        }
+	
+	    });
+
+Android webview网页视频无法全屏解决（onShowCustomView不调用）
+
+
+onShowCustomView 方法的理解
+
+
+##### WebView与JS的交互
+
+![](https://i.imgur.com/nF3rn67.png)
+
+对于Android调用JS代码的方法有2种： 
+1. 通过WebView的loadUrl（） 
+2. 通过WebView的evaluateJavascript（）
+
+对于JS调用Android代码的方法有3种： 
+1. 通过WebView的addJavascriptInterface（）进行对象映射 
+2. 通过 WebViewClient 的shouldOverrideUrlLoading ()方法回调拦截 url 
+3. 通过 WebChromeClient 的onJsAlert()、onJsConfirm()、onJsPrompt（）方法回调拦截JS对话框alert()、confirm()、prompt（） 消息
+
+
+两种方法混合使用，即Android 4.4以下使用方法1，Android 4.4以上方法2
+
+// Android版本变量
+final int version = Build.VERSION.SDK_INT;
+// 因为该方法在 Android 4.4 版本才可使用，所以使用时需进行版本判断
+
+```java
+
+if (version < 18) {
+    mWebView.loadUrl("javascript:callJS()");
+} else {
+    mWebView.evaluateJavascript（"javascript:callJS()", new ValueCallback<String>() {
+        @Override
+        public void onReceiveValue(String value) {
+            //此处为 js 返回的结果
+        }
+    });
+}
+```
+
+// 继承自Object类
+public class AndroidtoJs extends Object {
+
+    // 定义JS需要调用的方法
+    // 被JS调用的方法必须加入@JavascriptInterface注解
+    @JavascriptInterface
+    public void hello(String msg) {
+        System.out.println("JS调用了Android的hello方法");
+    }
+}
+
+在html 中
+
+<!DOCTYPE html>
+<html>
+   <head>
+      <meta charset="utf-8">
+      <title>Carson</title>  
+      <script>
+
+
+         function callAndroid(){
+        // 由于对象映射，所以调用test对象等于调用Android映射的对象
+            test.hello("js调用了android中的hello方法");
+         }
+      </script>
+  
+
+```java
+</head>
+   <body>
+      //点击按钮则调用callAndroid函数
+      <button type="button" id="button1" onclick="callAndroid()"></button>
+   </body>
+</html>
+```
+
+
+
+建议使用使用这样的
+
+// 通过addJavascriptInterface()将Java对象映射到JS对象
+        //参数1：Javascript对象名
+        //参数2：Java对象名
+        mWebView.addJavascriptInterface(new AndroidtoJs(), "test");//AndroidtoJS类对象映射到js的test对象
+
+
+重新AndroidtoJs 写这个方法
+
+对各个方法独立处理，然后能对 参数或者方法有独立性。
+
+## 如何避免WebView内存泄露？
+
+### onDestroy 中添加
+
+	WebView.removeAllViews();
+	mWebView.destroy();
+	mWebView=null;
+
+全部
+
+	@Override
+	protected void onDestroy() {
+	    if( mWebView!=null) {
+	
+	    // 如果先调用destroy()方法，则会命中if (isDestroyed()) return;这一行代码，需要先onDetachedFromWindow()，再
+	    // destory()
+	    ViewParent parent = mWebView.getParent();
+	    if (parent != null) {
+	        ((ViewGroup) parent).removeView(mWebView);
+	    }
+	
+	    mWebView.stopLoading();
+	    // 退出时调用此方法，移除绑定的服务，否则某些特定系统会报错
+	    mWebView.getSettings().setJavaScriptEnabled(false);
+	    mWebView.clearHistory();
+	    mWebView.clearView();
+	    mWebView.removeAllViews();
+	    mWebView.destroy();
+	
+	}
+	super.on Destroy();
+}
+
+作者：wencymu
+链接：https://www.jianshu.com/p/3e8f7dbb0dc7
+來源：简书
+著作权归作者所有。商业转载请联系作者获得授权，非商业转载请注明出处。
+
+### layout 中添加webview
+
+	//mWebView=new WebView(this);
+	mWebView=new WebView(getApplicationContext());
+	LinearLayout linearLayout  = findViewById(R.id.xxx);
+	linearLayout.addView(mWebView);
+
+### 手动删除引用
+
+	public void onCreate(Bundle savedInstanceState) {
+	    super.onCreate(savedInstanceState);
+	    setConfigCallback(WindowManager)getApplicationContext().getSystemService(Context.WINDOW_SERVICE));
+	}
+	
+	public void onDestroy() {
+	    setConfigCallback(null);
+	    super.onDestroy();
+	}
+
+ 
+
+## 最后
+
+建议 把webview 封装起来，然后在对外扩展，当然只优化这些是不够的，对html中  js 和css加载顺序和渲染的力度还有很大一部分关系的。同时对通信和适配也有很大空间。 上面的题的问题，是我在项目用到的，在 文章中只是抛砖引玉了一下，自己去搜索学习一下。还得感谢下面的文章 给出很大的帮助的。 
+
+## 感谢
+http://blog.csdn.net/gao36951/article/details/77942419
+
+https://www.jianshu.com/p/c2412918b2b5
+
+https://www.cnblogs.com/lys-iOS-study/p/7097774.html
+
+http://blog.csdn.net/harvic880925/article/details/51523983
+
+http://blog.csdn.net/xygy8860/article/details/53334476?utm_source=itdadao&utm_medium=referral
+

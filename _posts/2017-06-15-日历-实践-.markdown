@@ -1,0 +1,27 @@
+---
+layout:     post
+title:      "日历 实践"
+subtitle:   " \"app \""
+date:       2017-06-15 15:04:00
+author:     "Smm"
+header-img: "img/post-bg-2015.jpg"
+tags:
+    - app
+---
+
+
+> 最近 有个设计 是仿照其他app 做的 ，日历查看 一周的 内容
+
+
+效果如下
+![slideshow](http://shimengmeng.win/img/project/rili.gif)
+
+日历滑动 下面列表滚动。
+
+下面列表滚动，日历也跟着滚动。
+
+  
+ 横向滑动的日历。
+
+
+最后git 地址 https://github.com/smm113522/calendar

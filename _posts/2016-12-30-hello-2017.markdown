@@ -1,0 +1,34 @@
+---
+layout:     post
+title:      "欢迎来到乐观者开发blog"
+subtitle:   " \"我的第一篇blog\""
+date:       2016-12-30 14:36:00
+author:     "Smm"
+header-img: "img/post-bg-2015.jpg"
+tags:
+    - 生活
+---
+
+> “Yeah It's on. ”
+
+
+#写在前面
+
+现在是2016年最后一个工作日了，我的github博客终于搭建好了。搭建过程中从入门得到放弃的过程，来来回回好几次了。 在此之前，一直使用CSDN和简书.感谢http://www.jianshu.com/p/4e65dcd4995a 这个博客给灵感，因为他写的太简单了，我以为太容易，实际上太多坑了和太多不会的.
+
+感谢这篇blog  的作者
+http://blog.csdn.net/renfufei/article/details/37725057/ ，他的给我砂锅似得界面才领会到。
+
+#如果你也想搭建自己的博客
+
+我先是在ubuntu上搭建，可以用但是太多困难了，干脆就放弃了，于是在windows下搭建简单多了，也没出什么问题。 
+给出一些链接：
+https://dailc.github.io/2016/10/29/jekyllbuild.html#rubychangeresource
+https://github.com/huxpro/huxpro.github.io/
+http://www.ruanyifeng.com/blog/2012/08/blogging_with_jekyll.html
+整个过程都比较简单，作为菜鸟的我就可以建出来，相信对你也不是难事！
+
+#写在最后
+
+还有一个两天就2017了，希望2017自己能不断学习，不断进步，遇见未来更好的自己。
+2017年加油。

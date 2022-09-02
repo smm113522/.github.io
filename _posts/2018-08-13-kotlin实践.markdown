@@ -1,0 +1,124 @@
+---
+layout:     post
+title:      "kotlin 实践"
+subtitle:   " \" 总结 \""
+date:       2018-08-13 22:16:10
+author:     "Smm"
+header-img: "img/010.jpg"
+tags:
+    - 总结
+---
+
+
+## 前言 
+
+一只都在看kotlin 的相关的知识和语法。。
+在三月份和四月份的项目中开始用的，，不过刚做了个雏形，我就离职了，把一些摊子给了一一个android了工作人员了。
+虽然有些于心不忍，由于我感觉公司下一年的变化和我想象中的不一样，也缺少了我对那份工作的热情，所以才提出来辞职的。
+
+我也和领导说了，不是不能加班，应该加班没有意义，例如，说好晚上加班上线，做了一晚上，被告知，还有写小功能，后台
+还没有攻克，在缓缓，有停留了好几天，又开始重复上线，没次都是这样，一次也罢了。但是没次，都是怕我们加班似的。。
+
+无语死了。。。吐槽完毕。。开始我觉得我的效率是有些低了，我也很顺应着变化，但是每个人都不是自己想象中的那么努力。
+好像有些人骗了自己，也骗了大家。。唯有自己相信的才是真的。。自己骗自己，可是生活不会骗自己。
+
+## kotlin 基础
+ 
+
+## 实体 
+
+`companion object {     fun newInstance(): DemoFragement {         return DemoFragement()     } }
+`
+ 
+
+				 	open class BaseResult<T>(val error: Boolean = false, val results: T? = null) 
+ open class BaseResults(val error: Boolean = false, val results: String)
+
+
+## gson 解析
+
+
+ 	
+
+```java
+
+ object GsonUtils {      //  json 是  map //     转 list     fun <T> getObjectList(jsonString: String, cls: Class<T>): ArrayList<T> {         val list = ArrayList<T>()         try {             val gson = Gson()             val arry = JsonParser().parse(jsonString).asJsonArray             for (jsonElement in arry) {                 list.add(gson.fromJson(jsonElement, cls))             }         } catch (e: Exception) {             e.printStackTrace()         }          return list     }      //    json 是list 转 list     fun <T> getObjectLists(jsonString: String, cls: Class<T>): ArrayList<T>? {         var list: ArrayList<T> = ArrayList()         try {             val gson = Gson()             list = gson.fromJson(jsonString, object : TypeToken<ArrayList<T>>() {              }.type)         } catch (e: Exception) {             e.printStackTrace()         }          return list     }      //  实体 是一个实体类     fun <T> getBaseResult(JsonString: String): BaseResult<T> {         if (!TextUtils.isEmpty(JsonString)) {             val error: Boolean = JSONObject(JsonString).get("error") as Boolean             val results: T = JSONObject(JsonString).get("results") as T              return BaseResult(error, results)         }         return BaseResult(true, null);     }      //   实体数组     fun getBaseResults(JsonString: String): BaseResults {         if (!TextUtils.isEmpty(JsonString)) {             val error: Boolean = JSONObject(JsonString).get("error") as Boolean             val results: JSONArray = JSONObject(JsonString).get("results") as JSONArray              return BaseResults(error, results.toString())         }         return BaseResults(true, "获取失败");     } }
+
+```
+
+
+## 基础
+定义函数
+	 
+	fun sum(a: Int, b: Int) = a + b
+	public fun printSum(a: Int, b: Int) {
+	     print(a + b)
+	}
+
+	val a: Int = 1
+	val b: = 1    // 推测为Int 类型
+	val c: Int    // 没有初始化就要求说明类型
+	c = 1         // 明确赋值
+
+	var x = 5    // 推测为Int类型
+
+[基础](https://www.cnblogs.com/figozhg/p/5107750.html "基础")
+
+
+Lazy property Lazy属性
+
+创建单例模式
+
+	1 object Resource {
+	2 
+	3     val name = "Name"
+	4 
+	5 }
+
+
+
+###数组 
+
+	var list = Ararry();
+
+### 网络请求
+
+	 compile 'com.ohmerhe.kolley:kolley:0.3.1'
+
+...
+
+ 	Http.post {
+            url = "http://192.168.20.135/phpPost.php"
+            params {
+                "ret1" - "jim"
+                "ret2" - "tom"
+            }
+
+            onSuccess {
+
+                bytes ->
+
+                Log.e("result======>", bytes.toString(Charset.defaultCharset()))
+
+            }
+        }
+....
+
+
+###Anko 的使用
+
+	1 alert("Testing alerts") {
+	2     ...
+	3 }.show()
+
+[案例](https://www.cnblogs.com/figozhg/p/6854179.html "案例")
+
+	indeterminateProgressDialog("This a progress dialog").show()
+这样写不知道怎么取消，很头疼
+
+
+
+
+
+
+

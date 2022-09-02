@@ -1,0 +1,138 @@
+---
+layout:     post
+title:      "Android X构造模块化和组件化"
+subtitle:   " \" 学习 \""
+date:       2019-02-13 19:35:10
+author:     "Smm"
+header-img: "img/011.jpg"
+tags:
+    - 教程
+---
+
+
+
+
+## android X 是什么
+按照官方文档说明 androidx 是对 android.support.xxx 包的整理后产物。由于之前的support包过于混乱，所以，google推出了 androidX。
+
+只要是已更新版本，在原来的基础上更新，几乎都会遇到迁移到androidx中去，会遇到不一定到问题。
+
+当出现在这里当是，我也是懵逼是状态，androidx 到底更新了什么，更新文档显示是19年1月初更新当。
+简单地说就是新的库可以在不同的Android版本上使用。比如之前我们如果使用support为27.1.1的相关依赖库时。可能需要所有相关的support 库都为27.1.1。如果其中有bug的话，可能需要所有的都去升级，存在一个绑定关系，而且正式版的发布周期也很长。
+
+通过AndroidX，我们可以看到实时实现的特性和bug修复。升级个别依赖，不需要对使用的所有其他库进行更新。这就和我们使用Github上的开源库一样的，出了问题，我们可以提出bug和意见。作者修复后，发布新版本，我们就可以直接替换使用了。更加的透明便捷。
+
+
+会影响不同当第三方框架当使用
+butterknife 和glide 的使用情况
+
+把项目导入到
+compileSdkVersion 版本升级到 28及以上；
+buildToolsVersion 版本改为 28.0.2及以上。
+
+之后就会出现android x 到问题。所以不得不进行 迁移到android x 中去。所以我开始了迁移过程。
+
+先看变化吧
+
+常用依赖库对比：
+
+
+Old  build artifact
+
+com.android.support:appcompat-v7:28.0.2
+com.android.support:design:28.0.2
+com.android.support:support-v4:28.0.2
+com.android.support:recyclerview-v7:28.0.2
+com.android.support.constraint:constraint-layout:1.1.2
+
+AndroidX  build artifact
+
+androidx.appcompat:appcompat:1.0.0
+com.google.android.material:material:1.0.0
+androidx.legacy:legacy-support-v4:1.0.0
+androidx.recyclerview:recyclerview:1.0.0
+androidx.constraintlayout:constraintlayout:1.1.2
+
+常见库到变化
+常用支持库类对比：
+
+Support Library class
+AndroidX class
+
+android.support.v4.app.Fragment
+androidx.fragment.app.Fragment
+
+
+android.support.v4.app.FragmentActivity
+androidx.fragment.app.FragmentActivity
+
+
+android.support.v7.app.AppCompatActivity
+androidx.appcompat.app.AppCompatActivity
+
+
+android.support.v7.app.ActionBar
+androidx.appcompat.app.ActionBar
+
+
+android.support.v7.widget.RecyclerView
+androidx.recyclerview.widget.RecyclerView 
+
+开始配置吧。
+1.将AS更新至 AS 3.2及以上；
+2.Gradle 插件版本改为 4.6及以上；
+3.在项目的gradle.properties文件里添加如下配置：
+
+android.useAndroidX=true
+android.enableJetifier=true
+4.compileSdkVersion 版本升级到 28及以上；
+   buildToolsVersion 版本改为 28.0.2及以上。
+   
+5.可以一键进行
+   [](https://upload-images.jianshu.io/upload_images/4625401-b9524e8fa789d620.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/316)
+   
+   
+6.必然会有冲突，所以要修改一些配置，
+   例如：Manifest merger failed : Attribute application@appComponentFactory value=(android.support.v4.app.CoreComponentFactory) from [com.android.support:support-compat:28.0.0] AndroidManifest.xml:22:18-91
+   
+   需要添加 在<application>标签里面加上：tools:replace="android:appComponentFactory" 才可以。
+   
+还有第三方库。进行了一通配置居然有错误，很是失望。
+   
+所以不得不对butterknife 和glide 重构一下了，我这里就写三个。其他当然也有，自己去源码库里面找去吧。
+   
+## 组件化模块化
+	我的框架组织是下面的。
+	
+	把lib 单独拿出来，重新写net lib ，为了不同控件对不同对网络请求有时候ip地址都一样。
+	
+	把项目 模块区分开来，为了，产品变化。
+	
+	这里就写一些我理解过程把。
+
+		
+## Arouter 中版本
+
+用阿里对路由框架，其他也可以，自己也可以写，用到技术和butterknife 一样。切片AOP 操作的。
+用到看他他更新部分功能，还支持androidx 对fragment 独立很有帮助，
+
+如里Fragment fragment = (Fragment) ARouter.getInstance().build("/test/fragment").navigation();
+
+可以直接获取到fragment 之前版本没有这波操作，自己又用到另一个第三方库，把fragment 转class 里面，再去获取到。
+
+
+
+## butterknife 大神高级的最新10.0.0版本
+
+butterknife10 版本好，兼容android x ，还有一个目的是在 其他module 中使用依然可以用了。
+
+之前的版本只能在主的module 中用，
+@BindView(R2.id.tabs)
+TabLayout tabs;
+
+用到R2 这个对我少写好多代码。也加快了效率。。。
+
+
+## 最后
+
+我这里为模块化和androidx 踩过坑，一些建议和选择上首选版。还有很多路要走。。

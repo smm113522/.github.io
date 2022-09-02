@@ -1,0 +1,167 @@
+---
+layout:     post
+title:      "Arouter遇到的坑"
+subtitle:   " \" 总结 \""
+date:       2018-01-06 14:16:10
+author:     "Smm"
+header-img: "img/006.jpg"
+tags:
+    - 总结
+---
+
+
+
+
+## arouter 是什么
+
+ Android平台中对页面、服务提供路由功能的中间件，我们可以叫他路由器
+
+主要功能	功能介绍
+
+- 支持直接解析标准URL进行跳转，并自动注入参数到目标页面中
+- 支持多模块工程使用
+- 支持添加多个拦截器，自定义拦截顺序
+- 支持依赖注入，可单独作为依赖注入框架使用
+- 支持InstantRun
+- 支持MultiDex(Google方案)
+- 映射关系按组分类、多级管理，按需初始化
+- 支持用户指定全局降级与局部降级策略
+- 页面、拦截器、服务等组件均自动注册到框架
+- 支持多种方式配置转场动画
+- 支持获取Fragment
+- 完全支持Kotlin以及混编(配置见文末 其他#5)
+
+
+## 怎么使用
+添加依赖和配置
+
+	android {
+	    defaultConfig {
+		...
+		javaCompileOptions {
+		    annotationProcessorOptions {
+			arguments = [ moduleName : project.getName() ]
+		    }
+		}
+	    }
+	}
+
+	dependencies {
+	    // 替换成最新版本, 需要注意的是api
+	    // 要与compiler匹配使用，均使用最新版可以保证兼容
+	    compile 'com.alibaba:arouter-api:x.x.x'
+	    annotationProcessor 'com.alibaba:arouter-compiler:x.x.x'
+	    ...
+	}
+ 
+添加注解
+
+	// 在支持路由的页面上添加注解(必选)
+	// 这里的路径需要注意的是至少需要有两级，/xx/xx
+	@Route(path = "/test/activity")
+	public class YourActivity extend Activity {
+	    ...
+	}
+	初始化SDK
+	if (isDebug()) {           // 这两行必须写在init之前，否则这些配置在init过程中将无效
+	    ARouter.openLog();     // 打印日志
+	    ARouter.openDebug();   // 开启调试模式(如果在InstantRun模式下运行，必须开启调试模式！线上版本需要关闭,否则有安全风险)
+	}
+	ARouter.init(mApplication); // 尽可能早，推荐在Application中初始化
+
+发起路由操作
+	
+	// 1. 应用内简单的跳转(通过URL跳转在'进阶用法'中)
+	ARouter.getInstance().build("/test/activity").navigation();
+	
+	// 2. 跳转并携带参数
+	ARouter.getInstance().build("/test/1")
+				.withLong("key1", 666L)
+				.withString("key3", "888")
+				.withObject("key4", new Test("Jack", "Rose"))
+				.navigation();
+
+
+## 解决那些方案
+
+对下面 activity 替换 arouter的跳转
+
+	Intent intent = new Intent(mContext, XxxActivity.class);
+    intent.putExtra("key","value");
+    startActivity(intent);
+    
+    Intent intent = new Intent(mContext, XxxActivity.class);
+    intent.putExtra("key","value");
+    startActivityForResult(intent, 666);
+ 
+过程进行
+![](https://raw.githubusercontent.com/alibaba/ARouter/master/demo/arouter-demo.gif)
+ 
+其他功能自己去官方网站上去看，我啰嗦也是从demo中看到的，demo地址在
+
+[https://github.com/alibaba/arouter](https://github.com/alibaba/arouter)
+
+自己研究。
+
+## 遇到的坑有那些
+问题1 
+
+下面代码 自己建立起来更加demo 建立起来的。	
+
+	 @Route(path = "/select/userinfo")
+	public class SelectUserInfoActivity extends BaseActivity {
+ 
+    @Autowired
+    private int ok;
+
+就会报![](https://i.imgur.com/jr0OGoE.png)
+
+这样的错误，你就是不知道为什么？
+网上也从的和这样的不一样，走了好几遍还是不可以。
+
+这里讲一下android studio 工具的使用
+发现 GradleConsole 中有大量的报错信息不被人知道。
+如图
+  ![](https://i.imgur.com/cwqRaTC.png)
+
+下面也有一些报错新，这样就清晰了很多，但是你还是不容易找到，自己从难到易 找到的。
+
+![](https://i.imgur.com/lRcP0fs.png)
+
+** 才知道 把private 去掉 。或者 **
+![](https://i.imgur.com/EiWo9OQ.png)
+
+这样的代码是ok 的。
+
+问题2
+
+	ARouter.getInstance().build("test/1")
+             .withLong("key1", 666L)
+             .withString("key3", "888")
+             .navigation();
+
+上面代码会出现 下面报错
+
+ ![](https://i.imgur.com/7zf43yN.png)
+
+修改为 下面就ok 了
+
+	ARouter.getInstance().build("/test/1")
+             .withLong("key1", 666L)
+             .withString("key3", "888")
+             .navigation();
+
+问题三
+
+ 
+	ARouter.getInstance().build("/test/1")
+             .withLong("key1", 666L)
+             .withString("key3", "888")
+             .navigation();
+
+这样的代码找不到 /test/1 这个 路由器
+
+这样的初始化，还必须在main app 下的build 下，我用组件化的时候以为会很好的实现。
+
+这些问题困扰了我好长时间，还是对原来demo 不够了解。
+

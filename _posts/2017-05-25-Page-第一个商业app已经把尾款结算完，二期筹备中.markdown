@@ -1,0 +1,60 @@
+---
+layout:     post
+title:      "第一个商业app已经把尾款结算完，二期筹备中"
+subtitle:   " \"app \""
+date:       2017-05-25 15:04:00
+author:     "Smm"
+header-img: "img/post-bg-2015.jpg"
+tags:
+    - app
+---
+
+
+> 此app仅供学习参考，不作为商业用途，并且不会开源出去，只能说是自己的总结。
+
+## 优铺 app 已经上线了
+
+* 此app为房地产app 主要是针对售楼处，对客户的跟踪：
+    1. 角色分配，分配不同的角色。
+    2. 其他人也可以去带看 客户，来赚钱，不过是他们指定的楼房。
+    3. 报备自己的客户，信息，有售楼处带看，意向，签约，最后结束。
+    4. 主要是楼盘信息展示吧，对楼盘 图片和视频以及参数的介绍吧。
+   
+### 动态效果
+![slideshow](http://shimengmeng.win/img/youpu/GIF.gif)          ![slideshow](http://shimengmeng.win/img/youpu/GIF22.gif)
+
+ 
+### 一组应用的截图
+
+![slideshow](http://shimengmeng.win/img/youpu/1.png)       
+![slideshow](http://shimengmeng.win/img/youpu/2.png)
+![slideshow](http://shimengmeng.win/img/youpu/3.png)
+![slideshow](http://shimengmeng.win/img/youpu/4.png)
+![slideshow](http://shimengmeng.win/img/youpu/5.png)
+![slideshow](http://shimengmeng.win/img/youpu/6.png)
+![slideshow](http://shimengmeng.win/img/youpu/7.png)
+![slideshow](http://shimengmeng.win/img/youpu/8.png)
+![slideshow](http://shimengmeng.win/img/youpu/报备.png)
+![slideshow](http://shimengmeng.win/img/youpu/积分.png)
+![slideshow](http://shimengmeng.win/img/youpu/首页.png)
+![slideshow](http://shimengmeng.win/img/youpu/信息.png)
+
+
+## 上面是界面 
+
+对于 自己半年开发出来的东西，用户量虽然很少，但是 从另一面提现自己该有的都有了。
+
+点击效果的收集和使用。
+
+多个fragemnt 的使用，情况也不是很好，对fragment 不能有太多压力的检查。
+
+从 每天几百crash 到2个，优化系数还是不错的。
+![slideshow](http://shimengmeng.win/img/youpu/crash.png)
+
+从侧面来看，自己写的还不是太严谨，对java 的基础了解的不够透彻，也许还是很多因素吧。
+
+这些cresh 随对 用户影响是无形的，但是也是有压力的。
+
+## 感谢
+
+感谢整体团队的支持和团队能够完成它。ios也是同步上线，也可以看看哦。

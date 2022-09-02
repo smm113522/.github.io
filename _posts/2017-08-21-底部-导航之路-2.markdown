@@ -1,0 +1,56 @@
+---
+layout:     post
+title:      "底部导航2"
+subtitle:   " \"app \""
+date:       2017-08-21 10:14:00
+author:     "Smm"
+header-img: "img/title.jpg"
+tags:
+    - 教程
+---
+
+
+
+底部导航 相关的很多，因为我进入现在的公司，我感到一头雾水，怎么可以怎么啰嗦的写底部导航呢。
+而且复用和规律 都没有。我已经无语了，只能默默的改和偷偷换掉他。
+
+对底部导航一致在收集的状态。
+
+ 目前的demo 的效果如下：
+ 
+![效果](https://shimengmeng.win/img/project/demo1.gif)
+
+
+
+![效果](https://shimengmeng.win/img/project/demo2.gif)
+
+
+主要是 
+RadioGroup+RadioButton 组合产生底部"
+
+RadioGroup+RadioButton  这个加上viewPager",
+ 
+TabHostActivity底部导航"
+ 
+TabHost+viewpager",
+
+TabHost实现Tab切换",
+ 
+TabLayout基本使用",
+  
+TabLayout 底部导航", 
+
+BottomNavigation 底部导航",
+ 
+自定义 底部导航", 
+
+还有收集第三方的 导航方式。
+ 
+主要从
+
+目前实战的效果
+
+![效果](http://shimengmeng.win/img/project/demo3.PNG)
+
+
+demo 学习地址[BottomNavigationView](https://github.com/smm113522/MaterialDesign/tree/demo/BottomNavigationView "BottomNavigationView")

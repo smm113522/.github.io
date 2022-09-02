@@ -1,0 +1,189 @@
+---
+layout:     post
+title:      "工具聚集地"
+subtitle:   " \"IntelliJ系类 使用\""
+date:       2017-03-16 10:52:00
+author:     "Smm"
+header-img: "img/post-bg-2015.jpg"
+tags:
+    - 生活
+---
+
+
+## 前言  
+
+IntelliJ 家族里面是个不错的产品，从而相对应去专业，也变的简单起来了。
+
+俗话说：工欲善其事必先利其器。
+
+有了这个神器，对于开发，变得简单起来了。自己是个工具控了。
+
+## Android Studio 2.2
+
+	
+android 开发神奇，是快速开发android 的工具，google 也是会更新的，adt google 已经不维护，现在开始也不算晚。
+
+## IntelliJ IDEA 2016.3.4(64)
+
+jee 开发神器，脱离eclipse 和MyEclipse 综合开发的集聚地。开发者必不可以缺少的工具。
+
+## JetBrains WebStorm 2016.3.2(64)
+
+前端工程师 必选的工具，有些工程师不用这个.
+
+## JetBrains PhpStorm 2016.2.2(64)
+
+php 开发工具
+
+## JetBrains PyCharm Community Edition 2016.3.2(64)
+	python 开发入门很好工具,
+	pyzo 也可以开发,相对简单.
+## A cross-platform IDE for C and C++
+
+开发c或者c++ 不是必选，而是习惯了。
+
+## A cross-platform .NET IDE 
+net 开发，这个vs还是好一点。html vs 也是去做，还是说习惯。
+## Many databases, one tool 
+	数据库连接功能。
+	
+## idea 插件
+
+具体功能自己去百度，影响会深一点。
+
+ - 1 GsonFormat 插件
+ 
+ - 2 Android ButterKnife Zelezny
+ 
+ - 3 genymotion
+ 
+ - 4 Android Studio Prettify
+ 
+ - 5 MVPHelper
+ 
+ - 6 ApkMultiChannelPlugin 
+ 
+ 其他工具聚集地
+    [https://ydmmocoo.github.io/2016/06/28/Android-Studio%E6%8F%92%E4%BB%B6%E6%95%B4%E7%90%86/](https://ydmmocoo.github.io/2016/06/28/Android-Studio%E6%8F%92%E4%BB%B6%E6%95%B4%E7%90%86/ "工具聚集地")
+	
+	
+## 其他工具收集
+
+1、360Signer 360 签名 和 360 加固 
+
+2、maven 环境 .m2 文件夹的存放 。以及maven项目 的维护
+
+3、WiFi共享大师  电脑散发wifi
+
+4、android studio 开发 工具
+
+5、git 和svn 版本控制
+
+git--->Source Tree 和TortoiseGit
+svn-->TortoiseSVN
+
+5、JetBrains 公司里面的工具
+	phpstorm
+	pycharm
+	webstorm
+	IntelliJ IDEA 2016.3.3(64)
+
+6、Atom 
+
+7、myeclipse 需破解
+
+8、xcode 
+
+9.微信web开发者工具 
+
+10.PLSQL Developer 连接oracle
+
+11、Charles.exe   抓包
+
+12、2345看图王  
+
+13、Codota 
+
+14、Navicat Premium 连接数据库
+
+15、Adobe Photoshop CS6（免安装）
+
+16、XMind 8 Update 2  画图
+
+17、PxCook  标记图
+
+18、Everything.exe  搜索本地
+
+19、Lantern   免费vpn
+
+20、phpStudy.exe  
+
+21、屏幕取色 V1.0
+
+22、微信
+
+23、WAV MP3 Converter（截取声音的）
+
+24、海马玩模拟器 或天天 或 android studio 里面自带的模拟器
+
+25、MarkdownPad 2  md文件 很多
+
+26、HBuilder  
+
+27、Foxmail
+
+28、百度网盘
+
+29、eDiary.exe  
+
+30、LICEcap  录屏
+
+31、Mindjet MindManager 2016
+
+32、PLSQL Developer
+
+33、TIM
+
+34、Axure RP 8 主要是插件
+
+35、MockingBot主要是插件
+
+36、刷机精灵 刷机大师
+
+37、Google Chrome
+
+		Axure ep
+		掘金
+		octotree
+		gitcodetree
+		Access-Control-Expose-Headers 
+		postman
+
+		
+38、apktool dex2jar-0.0.9.15 jd-gui-0.3.5.windows
+
+39、sqlitebrowser_2.0.1400148002
+
+40、genymotion_vbox86p_6.0_160608_210807
+
+41、ideaIU-2016.3.3
+
+42、sts-bundle
+
+43、NotePad++
+
+44、HA_SearchAndReplace
+
+45、apache-tomcat-9.0.0.M13 
+
+
+
+
+
+	
+
+## 后记
+
+感谢作者开发这些工具，供人们使用，如何破解就写了，是为了尊重作者。至于破解方法网上很多，也能成功，作为作者你也一定不希望看到。
+
+	

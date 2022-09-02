@@ -1,0 +1,93 @@
+---
+layout:     post
+title:      "腾讯云ubuntu 配置 网站"
+subtitle:   " \"ubuntu 使用\""
+date:       2017-03-03 15:52:00
+author:     "Smm"
+header-img: "img/post-bg-2015.jpg"
+tags:
+    - ubuntu
+---
+
+
+## 前言 
+
+刚好看到腾讯云有免费的几天的服务器了，之前阿里云也有一个月的免费试用情况，自己都错过了，
+这个免费注册了一个腾讯云服务器测试一下自己之前ubuntu的使用情况。
+没有界面的ubuntu才让我抓了狂一样，前些日子是在上面开发来的，因为那里有界面样式，可以砂锅似得，
+去联系。但是给我的只是命令让我对文件夹的位置和里面有什么软件变得陌生起来。
+所以发布后台网址也是必不可以缺少的。
+
+## 开始练习
+网站发布需要 wordpress 后台和前台都有了，而且还是免费的这个很好。
+发布在phpstudy 中因为该程序包集成最新的Apache+PHP+MySQL+phpMyAdmin+ZendOptimizer,
+phpMyAdmin 数据库连接软件，真的还好的很。
+
+在windows 下安装 使用SecureCRTPortable.exe 连接 腾讯云后台。因为使用它可以复制和粘贴一下东西。
+ 使用SecureCRTPortable 的使用和操作，可能还需要激活，这个是windows版本。
+
+ 打开命令界面继续下面操作
+ phpstudy 安装和授权
+	wget -c http://lamp.phpstudy.net/phpstudy.bin 
+	chmod +x phpstudy.bin    #权限设置
+	./phpstudy.bin 　　　　#运行安装
+
+ 
+ 下载wordpress 
+ 从而了解了文件的新建 删除，移动重命名等操作。
+ 解压文件。
+ 
+  安装好  phpstudy 后，找到 	/phpstudy/www 这个文件夹，把wordpress 文件 放到www 文件夹下。进行访问
+  wordpress即可了，然后配置后台既可以看到运行界面了。
+  这里可以使用git 也好，直接下载也可也以。
+ 
+ 下面常用的命令：
+	 移动 文件
+	 sudo mv aaa /home/development
+	 sudo apt install zip
+	 zip -r aaa bb
+	 mkdir 目录名创建一个目录
+
+	rmdir 空目录名删除一个空目录
+
+	rm 文件名文件名删除一个文件或多个文件
+
+	rm –rf 非空目录名删除一个非空目录下的一切
+
+	touch 文件名创建一个空文件
+	unzip www.zip
+	
+	sudo chmod 777 www.zip
+	unzip www.zip
+	
+完成后。就可以用了。
+我最头疼的居然是mysql ，对外配置。
+在此期间 vim 的使用变的很重要了。因为，还得去修改一下文件，必须保存它。
+熟悉了一下命令吧。
+	移动某行，点击a ，添加文件 就可以修改和添加一些文字了。
+	
+	esc 之后的命令
+	删除命令
+	ndw或ndW：删除光标处开始及其后的n-1个字
+	do：删至行首
+	d$：删至行尾
+	ndd：删除当前行及其后n-1行
+
+	搜索及替换命令
+	/pattern：从光标开始处向文件尾搜索pattern
+	n：在同一方向重复上一次搜索命令
+	N：在反方向上重复上一次搜索命令
+
+	保存退出命令
+	:w ：保存当前文件
+	:x ：保存当前文件并退出
+	:q ：退出vi
+	:q! ：不保存文件并退出vi
+	q表示退出，wq表示保存退出,q!表示强制退出
+
+## 最后
+
+很遗憾没有配上图片，懒得去上传上去了，以后有时间我会收集起来，先上传上去，然后进行再配置路径吧。
+学习还得继续，对ubuntu 下tomcat 的发布java 软件，以及mysql 熟练的进行操作。 ubuntu 下node.js
+下快速发布等等 学习的方向吧。
+
